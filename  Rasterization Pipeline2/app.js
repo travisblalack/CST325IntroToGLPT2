@@ -33,7 +33,6 @@ function initializeAndStartRendering() {
         createShaders(loadedAssets);
         createScene();
 
-        // camera.cameraPosition.set(0, 1, 10);
 
         // kick off the render loop
         updateAndRender();
@@ -57,7 +56,7 @@ function initGL(canvas) {
     } catch (e) {}
 
     if (!gl) {
-        alert("Could not initialise WebGL, sorry :-(");
+        alert("Could not initialize WebGL, sorry :-(");
     }
 }
 
@@ -125,7 +124,11 @@ function createScene() {
 function updateAndRender() {
     requestAnimationFrame(updateAndRender);
 
+
     var aspectRatio = gl.canvasWidth / gl.canvasHeight;
+
+    var shade = Math.sin(time.secondsElapsedSinceStart) *0.5 + 0.5;
+    
 
     time.update();
     camera.update(time.deltaTime);
@@ -139,17 +142,24 @@ function updateAndRender() {
     gl.useProgram(colorProgram);
 
     // render ground
-    gl.uniform4f(colorProgram.uniforms.colorUniform, 0.5, 0.5, 0.5, 1.0);
+    gl.uniform4f(colorProgram.uniforms.colorUniform,0.5,0.5,0.5,1.0);
     groundGeometry.render(camera, projectionMatrix, colorProgram);
 
     // todo #4 - change color for the sphere
-    
+ 
 
     // todo #9 - animate the color of there sphere
-    // todo #10 - animate the color with non-grayscale values
+  
+    gl.uniform4f(colorProgram.uniforms.colorUniform,-1.0 - shade,shade,1.0 - shade, 2.0 + shade);
+    sphereGeometry.render(camera, projectionMatrix, colorProgram);
+  
+    
 
+    
+    
+    // todo #10 - animate the color with non-grayscale values
+  
     // todo #3 - render the sphere
 
-    gl.uniform4f(colorProgram.uniforms.colorUniform, 0.0, 0.0, 0.0, 0.0);
-    sphereGeometry.render(camera, projectionMatrix, colorProgram);
+   
 }
